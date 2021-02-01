@@ -1,0 +1,20 @@
+version: '3'
+services:
+  cakephp_web: # WEBサーバの設定
+    build:
+      context: .
+      dockerfile: ./Docker/php/Dockerfile # Dockerfileの場所を指定
+    volumes:
+      - .:/var/www/html:cached # マウント設定、ホスト側の階層と、コンテナ側の/var/www/htmlをマウント
+    ports:
+      - "80:80" # ポートの転送設定
+  cakephp_db: # DBサーバの設定
+    image: postgres:10.3-alpine # DockerHubから取得したいイメージを指定
+    environment: # postgresの初期設定（ユーザー名、パスワード、DB名を指定）
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test_db
+    ports:
+      - 5432:5432 # ポート転送の設定 ... ホスト側ポート:コンテナ内ポート (ポー>ト番号を同じにすると起動にエラーになる)
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data # マウント設定、コンテナ側のpostgresqlのデータディレクトリをホスト側の./postgres/dataにマウント
