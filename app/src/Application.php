@@ -81,13 +81,13 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // creating the middleware instance specify the cache config name by
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
-            ->add(new RoutingMiddleware($this));
+            ->add(new RoutingMiddleware($this))
+
             // 認証機能
             ->add(new AuthenticationMiddleware($this));
-
+            
         return $middlewareQueue;
     }
-
         public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
         $authenticationService = new AuthenticationService([
@@ -132,4 +132,5 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         // Load more plugins here
     }
+
 }

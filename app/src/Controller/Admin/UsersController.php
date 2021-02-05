@@ -12,6 +12,7 @@ use App\Controller\Admin\AdminController;
  */
 class UsersController extends AdminController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
         // 認証を必要としないログインアクションを構成し、
@@ -108,5 +109,19 @@ class UsersController extends AdminController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function login()
+    {
+        $this->request->allowMethod(['get', 'post']);
+        $result = $this->Authentication->getResult();
+        // POST, GET を問わず、ユーザーがログインしている場合はリダイレクトします
+        if ($result->isValid()) {
+            return $this->redirect('/admin');
+        }
+        // ユーザーが submit 後、認証失敗した場合は、エラーを表示します
+        if ($this->request->is('post') && !$result->isValid()) {
+            $this->Flash->error('ユーザー名かパスワードが正しくありません。');
+        }
     }
 }
