@@ -1,10 +1,11 @@
 <?php
-use Migrations\AbstractSeed;
 
+use Migrations\AbstractSeed;
+use Cake\Auth\DefaultPasswordHasher;
 /**
- * Posts seed.
+ * Users seed.
  */
-class PostsSeed extends AbstractSeed
+class UsersSeed extends AbstractSeed
 {
     /**
      * Run Method.
@@ -20,23 +21,26 @@ class PostsSeed extends AbstractSeed
     {
         $data = [
             [
-                'title' => '最初の投稿',
-                'description' => '最初の投稿',
-                'body' => '最初の投稿',
-                'published' => 1,
+                'username' => 'admin',
+                'password' => $this->_setPassword('admin'),
                 'created' => '2020-02-01 10:00:00',
                 'modified' => '2020-02-01 10:00:00'
             ],[
-                'title' => '2番目の投稿',
-                'description' => '2番目の投稿',
-                'body' => '2番目の投稿',
-                'published' => 1,
+                'username' => 'yamada',
+                'password' => $this->_setPassword('yamada'),
                 'created' => '2020-02-01 10:00:00',
                 'modified' => '2020-02-01 10:00:00'
-            ],
+            ]
         ];
 
-        $table = $this->table('posts');
+        $table = $this->table('users');
         $table->insert($data)->save();
+    }
+
+    protected function _setPassword(string $password) : ?string
+    {
+        if (strlen($password) > 0) {
+            return (new DefaultPasswordHasher())->hash($password);
+        }
     }
 }
