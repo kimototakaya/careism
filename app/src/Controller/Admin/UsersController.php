@@ -113,15 +113,23 @@ class UsersController extends AdminController
 
     public function login()
     {
-        $this->request->allowMethod(['get', 'post']);
-        $result = $this->Authentication->getResult();
-        // POST, GET を問わず、ユーザーがログインしている場合はリダイレクトします
-        if ($result->isValid()) {
-            return $this->redirect('/admin');
-        }
-        // ユーザーが submit 後、認証失敗した場合は、エラーを表示します
-        if ($this->request->is('post') && !$result->isValid()) {
-            $this->Flash->error('ユーザー名かパスワードが正しくありません。');
+        // $this->request->allowMethod(['get', 'post']);
+        // $result = $this->Authentication->getResult();
+        // // POST, GET を問わず、ユーザーがログインしている場合はリダイレクトします
+        // if ($result->isValid()) {
+        //     return $this->redirect('/admin');
+        // }
+        // // ユーザーが submit 後、認証失敗した場合は、エラーを表示します
+        // if ($this->request->is('post') && !$result->isValid()) {
+        //     $this->Flash->error('ユーザー名かパスワードが正しくありません。');
+        // }
+        if ($this->request->is('post')) {
+            $user = $this->Auth->identify();
+            if ($user) {
+                $this->Auth->setUser($user);
+                return $this->redirect($this->Auth->redirectUrl());
+            }
+            $this->Flash->error('ユーザー名またはパスワードが不正です。');
         }
     }
 }

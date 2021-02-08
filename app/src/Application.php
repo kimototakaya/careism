@@ -20,11 +20,11 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
-use Authentication\AuthenticationService;
-use Authentication\AuthenticationServiceInterface;
-use Authentication\AuthenticationServiceProviderInterface;
-use Authentication\Middleware\AuthenticationMiddleware;
-use Psr\Http\Message\ServerRequestInterface;
+// use Authentication\AuthenticationService;
+// use Authentication\AuthenticationServiceInterface;
+// use Authentication\AuthenticationServiceProviderInterface;
+// use Authentication\Middleware\AuthenticationMiddleware;
+// use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Application setup class.
@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
  */
-class Application extends BaseApplication implements AuthenticationServiceProviderInterface
+class Application extends BaseApplication 
 {
     /**
      * {@inheritDoc}
@@ -81,41 +81,42 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // creating the middleware instance specify the cache config name by
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
-            ->add(new RoutingMiddleware($this))
+            ->add(new RoutingMiddleware($this));
 
             // 認証機能
-            ->add(new AuthenticationMiddleware($this));
+            // ->add(new AuthenticationMiddleware($this));
             
         return $middlewareQueue;
     }
-        public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
-    {
-        $authenticationService = new AuthenticationService([
-            'unauthenticatedRedirect' => '/admin/users/login',
-            'queryParam' => 'redirect',
-        ]);
 
-        // identifiers を読み込み、username と password のフィールドを確認します
-        $authenticationService->loadIdentifier('Authentication.Password', [
-            'fields' => [
-                'username' => 'username',
-                'password' => 'password',
-            ]
-        ]);
+    // public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
+    // {
+    //     $authenticationService = new AuthenticationService([
+    //         'unauthenticatedRedirect' => '/admin/users/login',
+    //         'queryParam' => 'redirect',
+    //     ]);
 
-        //  authenticatorsをロードしたら, 最初にセッションが必要です
-        $authenticationService->loadAuthenticator('Authentication.Session');
-        // 入力した username と password をチェックする為のフォームデータを設定します
-        $authenticationService->loadAuthenticator('Authentication.Form', [
-            'fields' => [
-                'username' => 'username',
-                'password' => 'password',
-            ],
-            'loginUrl' => '/admin/users/login',
-        ]);
+    //     // identifiers を読み込み、username と password のフィールドを確認します
+    //     $authenticationService->loadIdentifier('Authentication.Password', [
+    //         'fields' => [
+    //             'username' => 'username',
+    //             'password' => 'password',
+    //         ]
+    //     ]);
 
-        return $authenticationService;
-    }
+    //     //  authenticatorsをロードしたら, 最初にセッションが必要です
+    //     $authenticationService->loadAuthenticator('Authentication.Session');
+    //     // 入力した username と password をチェックする為のフォームデータを設定します
+    //     $authenticationService->loadAuthenticator('Authentication.Form', [
+    //         'fields' => [
+    //             'username' => 'username',
+    //             'password' => 'password',
+    //         ],
+    //         'loginUrl' => '/admin/users/login',
+    //     ]);
+
+    //     return $authenticationService;
+    // }
 
     /**
      * @return void
